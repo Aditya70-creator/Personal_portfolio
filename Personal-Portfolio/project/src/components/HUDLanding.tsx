@@ -20,10 +20,6 @@ const scanLine = keyframes`
   0% { top: 0%; opacity: 0.8; }
   100% { top: 100%; opacity: 0; }
 `;
-const radarSpin = keyframes`
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-`;
 const blink = keyframes`
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
@@ -32,15 +28,6 @@ const fadeInUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 `;
-const neonFlicker = keyframes`
-  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-  20%, 24%, 55% { opacity: 0.4; }
-`;
-const radarBlip = keyframes`
-  0% { opacity: 1; transform: scale(0.5); }
-  100% { opacity: 0; transform: scale(2.5); }
-`;
-
 const BOOT_LINES = [
   'Initializing Portfolio...',
   'Loading Profile Data...',
@@ -90,7 +77,16 @@ function RadarSVG() {
         {BLIP_POSITIONS.map((b, i) => (
           <circle key={i} cx={b.cx} cy={b.cy} r="2.5" fill="#00ff41" />
         ))}
-        <g style={{ transformOrigin: `${cx}px ${cy}px`, animation: `${radarSpin} 3s linear infinite` } as React.CSSProperties}>
+        <g>
+          <animateTransform
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            from={`0 ${cx} ${cy}`}
+            to={`360 ${cx} ${cy}`}
+            dur="3s"
+            repeatCount="indefinite"
+          />
           <defs>
             <radialGradient id="sweepG2" cx="0%" cy="50%" r="100%">
               <stop offset="0%" stopColor="#00e5ff" stopOpacity="0" />
@@ -326,22 +322,49 @@ export default function HUDLanding({ onEnter }: HUDLandingProps) {
 
         {/* Center */}
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3, minHeight: { xs: 'calc(100vh - 120px)', md: 'auto' } }}>
-          {/* Arc reactor icon */}
-          <Box sx={{ position: 'relative', width: { xs: 80, md: 100 }, height: { xs: 80, md: 100 }, animation: `${neonFlicker} 6s ease-in-out infinite` }}>
-            <svg viewBox="0 0 100 100" width="100%" height="100%">
-              <defs>
-                <filter id="glowF">
-                  <feGaussianBlur stdDeviation="3" result="blur" />
-                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                </filter>
-              </defs>
-              <circle cx="50" cy="50" r="46" fill="none" stroke="#00e5ff" strokeWidth="1" strokeOpacity="0.4" style={{ animation: `${radarSpin} 8s linear infinite` }} />
-              <polygon points="50,15 62,35 80,28 72,48 88,58 68,62 68,80 50,70 32,80 32,62 12,58 28,48 20,28 38,35" fill="none" stroke="#00e5ff" strokeWidth="1.5" filter="url(#glowF)" style={{ animation: `${radarSpin} 12s linear infinite reverse` }} />
-              <circle cx="50" cy="50" r="14" fill="none" stroke="#00e5ff" strokeWidth="1.5" />
-              <circle cx="50" cy="50" r="8" fill="#00e5ff22" stroke="#00e5ff" strokeWidth="1" style={{ filter: 'drop-shadow(0 0 6px #00e5ff)' }} />
-              <circle cx="50" cy="50" r="3" fill="#00e5ff" style={{ filter: 'drop-shadow(0 0 4px #00e5ff)' }} />
-            </svg>
-          </Box>
+          
+          {/* [CONFIGURED PROFILE CONTAINER] */}
+          {(() => {
+            const filePath = ""; // Jab professional photo mil jaye, toh yahan path daal dena (e.g., "/my-pfp.png")
+            return (
+              <Box 
+                sx={{ 
+                  width: { xs: 120, md: 140 }, 
+                  height: { xs: 120, md: 140 }, 
+                  borderRadius: '50%', 
+                  border: filePath ? '2px solid #00e5ff' : '1px dashed #00e5ff', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  textAlign: 'center', 
+                  p: filePath ? 0 : 1, 
+                  mb: 2,
+                  overflow: 'hidden',
+                  bgcolor: 'rgba(0, 229, 255, 0.03)',
+                  boxShadow: filePath 
+                    ? '0 0 20px rgba(0, 229, 255, 0.4), inset 0 0 15px rgba(0, 229, 255, 0.2)' 
+                    : '0 0 15px rgba(0, 229, 255, 0.1), inset 0 0 15px rgba(0, 229, 255, 0.05)',
+                  animation: `${borderPulse} 4s ease-in-out infinite`
+                }}
+              >
+                {filePath ? (
+                  <Box
+                    component="img"
+                    src={filePath}
+                    alt={profile.name}
+                    sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <Typography 
+                    variant="caption" 
+                    sx={{ color: 'primary.main', fontSize: '0.55rem', letterSpacing: '0.15em', fontFamily: '"Orbitron", sans-serif', lineHeight: 1.4 }}
+                  >
+                    [ ADD PROFILE <br /> PHOTO ]
+                  </Typography>
+                )}
+              </Box>
+            );
+          })()}
 
           {/* Main title */}
           <Box sx={{ textAlign: 'center' }}>

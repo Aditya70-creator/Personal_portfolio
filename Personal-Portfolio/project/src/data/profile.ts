@@ -2,7 +2,7 @@ export const profile = {
   name: 'Aditya Mitra',
   role: 'B.Tech CSE Student',
   bio: 'Passionate about building systems that matter. I explore the intersection of software engineering, cybersecurity, and artificial intelligence — crafting tools that are both powerful and purposeful.',
-  email: 'aditya@example.com',
+  email: 'mitraaditya644@gmail.com',
   phone: '+91 XXXXX XXXXX',
   location: 'India',
   linkedin: 'https://www.linkedin.com/in/aditya-mitra-708913380',
@@ -11,7 +11,7 @@ export const profile = {
   discord: 'arrowadi0251',
   careerInterests: [
     'Software Engineering',
-    'Cybersecurity',
+    'Backend Development',
     'AI Development',
     'Open Source',
   ],
